@@ -15,13 +15,13 @@ An experimental integration of flask into OpenWhisk
 import re
 vdir = __file__[0:__file__.rfind('/')]+'/' if __file__.rfind('/')>=0 else ''
 with open(vdir+'flaskwsk/__init__.py', 'rt') as vfile:
-   verstrline = vfile.read()
-   VSRE = r"^__version__ = ['\"]([^'\"]*)['\"]"
-   mo = re.search(VSRE, verstrline, re.M)
-   if mo:
-      version_info = mo.group(1)
-   else:
-      raise RuntimeError("Unable to find version string in %s." % (VERSIONFILE,))
+    verstrline = vfile.read()
+    VSRE = r"^__version__ = ['\"]([^'\"]*)['\"]"
+    mo = re.search(VSRE, verstrline, re.M)
+    if mo:
+        version_info = mo.group(1)
+    else:
+        raise RuntimeError("Unable to find version string in %s." % (VERSIONFILE,))
 
 setup(
     name='flaskwsk',
