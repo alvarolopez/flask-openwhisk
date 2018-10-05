@@ -62,7 +62,7 @@ def invoke(app, args):
 
     response_type = parse_options_header(
         response.headers.get('Content-Type', 'application/octet-stream'))
-    if response_type[0][0:response_type[0].find('/')] == 'text':
+    if response_type[0][0:response_type[0].find('/')] != 'octet-stream':
         body = response.data.decode(response_type[1].get('charset', 'utf-8'))
     else:
         body = b64encode(response.data)
