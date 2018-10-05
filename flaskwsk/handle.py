@@ -12,7 +12,6 @@ def add_body(environ, body, content_type):
         environ['CONTENT_LENGTH'] = str(len(body))
     else:
         environ['wsgi.input'] = None
-        environ['CONTENT_LENGTH'] = '0'
 
 
 block = set(['x-client-ip', 'x-forwarded-for',
