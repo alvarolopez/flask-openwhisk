@@ -5,8 +5,8 @@ import sys
 import io
 
 
-def add_body(environ, body, contentType):
-    environ['CONTENT_TYPE'] = contentType
+def add_body(environ, body, content_type):
+    environ['CONTENT_TYPE'] = content_type
     if body:
         environ['wsgi.input'] = io.BytesIO(body)
         environ['CONTENT_LENGTH'] = str(len(body))
@@ -48,23 +48,23 @@ def invoke(app, args):
     }
 
     if environ['REQUEST_METHOD'] in ('POST', 'PUT'):
-        contentType = headers.get('content-type', 'application/octet-stream')
-        parsedContentType = parse_options_header(contentType)
+        content_type = headers.get('content-type', 'application/octet-stream')
+        parsed_content_type = parse_options_header(content_type)
         raw = args.get('__ow_body')
-        if parsedContentType[0][0:5] == 'text/':
-            body = raw.encode(parsedContentType[1].get('charset', 'utf-8'))
+        if parsed_content_type[0][0:5] == 'text/':
+            body = raw.encode(parsed_content_type[1].get('charset', 'utf-8'))
         else:
             body = b64decode(raw) if raw is not None else None
-        add_body(environ, body, contentType)
+        add_body(environ, body, content_type)
 
     add_headers(environ, headers)
 
     response = Response.from_app(app.wsgi_app, environ)
 
-    responseType = parse_options_header(
+    response_type = parse_options_header(
         response.headers.get('Content-Type', 'application/octet-stream'))
-    if responseType[0][0:responseType[0].find('/')] == 'text':
-        body = response.data.decode(responseType[1].get('charset', 'utf-8'))
+    if response_type[0][0:response_type[0].find('/')] == 'text':
+        body = response.data.decode(response_type[1].get('charset', 'utf-8'))
     else:
         body = b64encode(response.data)
 
