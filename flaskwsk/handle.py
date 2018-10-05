@@ -15,7 +15,8 @@ def add_body(environ, body, contentType):
         environ['CONTENT_LENGTH'] = '0'
 
 
-block = set(['x-client-ip', 'x-forwarded-for', 'x-forwarded-proto', 'x-global-transaction-id'])
+block = set(['x-client-ip', 'x-forwarded-for',
+             'x-forwarded-proto', 'x-global-transaction-id'])
 
 
 def add_headers(environ, headers):
@@ -46,7 +47,7 @@ def invoke(app, args):
        'wsgi.run_once': True
     }
 
-    if environ['REQUEST_METHOD'] == 'POST' or environ['REQUEST_METHOD'] == 'PUT':
+    if environ['REQUEST_METHOD'] in ('POST', 'PUT'):
         contentType = headers.get('content-type', 'application/octet-stream')
         parsedContentType = parse_options_header(contentType)
         raw = args.get('__ow_body')
@@ -60,7 +61,8 @@ def invoke(app, args):
 
     response = Response.from_app(app.wsgi_app, environ)
 
-    responseType = parse_options_header(response.headers.get('Content-Type', 'application/octet-stream'))
+    responseType = parse_options_header(
+        response.headers.get('Content-Type', 'application/octet-stream'))
     if responseType[0][0:responseType[0].find('/')] == 'text':
         body = response.data.decode(responseType[1].get('charset', 'utf-8'))
     else:

@@ -13,14 +13,16 @@ def index():
     return 'Hello!'
 
 
-@app.route('/echo', methods=['GET', 'HEAD', 'POST', 'PUT', 'DELETE', 'OPTIONS'])
+@app.route('/echo',
+           methods=['GET', 'HEAD', 'POST', 'PUT', 'DELETE', 'OPTIONS'])
 def echo():
     obj = {
        'method': request.method,
        'headers': dict(request.headers)
     }
     if request.method == 'POST' or request.method == 'PUT':
-        contentType = parse_options_header(request.headers.get('Content-Type', 'application/octet-stream'))
+        contentType = parse_options_header(
+            request.headers.get('Content-Type', 'application/octet-stream'))
         encoding = contentType[1].get('charset', 'utf-8')
         obj['data'] = request.data.decode(encoding)
     return jsonify(obj)
